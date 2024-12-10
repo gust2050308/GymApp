@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Color de fondo del campo -->
+    <solid android:color="#FFFFFF" />
+
+    <!-- Bordes redondeados -->
+    <corners android:radius="25dp" />
+
+    <!-- Borde con un color y ancho definido -->
+    <stroke
+        android:width="2dp"
+        android:color="#CCCCCC" />
+</shape>
