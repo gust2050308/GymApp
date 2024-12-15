@@ -26,18 +26,22 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    buildFeatures.viewBinding=true
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -47,6 +51,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
     implementation("com.google.zxing:core:3.4.1")
     implementation("com.journeyapps:zxing-android-embedded:4.1.0")
 
@@ -54,14 +59,11 @@ dependencies {
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
 
     implementation("androidx.camera:camera-camera2:1.4.0")
-
     implementation("androidx.camera:camera-lifecycle:1.4.0")
-
     implementation("androidx.camera:camera-video:1.4.0")
-
     implementation("androidx.camera:camera-extensions:1.4.0")
 
+    implementation("com.google.android.material:material:1.4.0")
 
-    implementation ("androidx.core:core-ktx:1.6.0")
-
+    implementation("androidx.core:core-ktx:1.6.0")
 }

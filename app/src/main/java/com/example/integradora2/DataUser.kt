@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -39,6 +40,11 @@ class DataUser : AppCompatActivity() {
         if (base64String != null) {
             decodeBase64ToImage(base64String, imageView)
         }
+
+        binding.btnCmanbiarDatos.setOnClickListener {
+            val intent= Intent(this@DataUser,ChangeData::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -52,6 +58,28 @@ class DataUser : AppCompatActivity() {
                 var intent = Intent(this@DataUser, Home::class.java)
                 startActivity(intent)
             }
+            R.id.CerarSesion -> {
+                val alertDialog = AlertDialog.Builder(this)
+                    .setTitle("Cerrar Sesión")
+                    .setMessage("¿Estás seguro de que deseas cerrar sesión?")
+                    .setPositiveButton("Sí") { dialog, which ->
+                        val sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE)
+                        val editor = sharedPreferences.edit()
+                        editor.clear()
+                        editor.apply()
+
+                        val intent = Intent(this@DataUser, MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        startActivity(intent)
+                    }
+                    .setNegativeButton("No") { dialog, which ->
+                        dialog.dismiss()
+                    }
+                    .create()
+
+                alertDialog.show()
+            }
+
         }
         return super.onOptionsItemSelected(item)
     }

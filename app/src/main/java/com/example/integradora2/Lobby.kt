@@ -14,6 +14,9 @@ import com.android.volley.toolbox.Volley
 import com.example.integradora2.databinding.ActivityLobbyBinding
 import org.json.JSONObject
 import android.util.Log
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.integradora2.Adapter.adapterAssistance
+import com.example.integradora2.Model.Assistencias
 import com.google.zxing.integration.android.IntentIntegrator
 import java.time.Duration
 import java.time.LocalDate
@@ -35,12 +38,32 @@ class Lobby : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE)
         val id = sharedPreferences.getString("id", null)
 
+        var lista = mutableListOf<Assistencias>()
+        val adaptador = adapterAssistance(lista)
+
+        binding.rvAsistencias.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.rvAsistencias.adapter = adaptador
+
         if (!id.isNullOrEmpty()) {
             val url = "http://192.168.0.7:8080/assistances/assistacesById/$id"
             val method = Request.Method.GET
             val listener = Response.Listener<JSONObject> { result ->
-
+                val arr = result.getJSONObject("assistanceRespose").getJSONArray("assistances")
+                for (i in 0 until arr.length()) {
+                    lista.add(
+                        Assistencias(
+                            arr.getJSONObject(i).getInt("assistance_Id"),
+                            arr.getJSONObject(i).getString("entryDate"),
+                            arr.getJSONObject(i).getString("entrance"),
+                            arr.getJSONObject(i).getString("outside"),
+                            arr.getJSONObject(i).getString("visitDuration")
+                        )
+                    )
+                }
+                Log.d("Debug", "Lista de asistencias: $lista")
+                adaptador.notifyDataSetChanged() // Notificar al adaptador aquí
             }
+
             val errorListener = Response.ErrorListener { error ->
                 Log.e("Error", error.message.toString())
             }
@@ -50,6 +73,7 @@ class Lobby : AppCompatActivity() {
             Toast.makeText(this, "No hay nada en el teléfono", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_actions, menu)
@@ -125,6 +149,12 @@ Toast.makeText(this,"Marking entrance time",Toast.LENGTH_SHORT)
                         } else {
                             Toast.makeText(this, "Error en el servidor", Toast.LENGTH_SHORT).show()
                         }
+
+                        var intent = Intent(this@Lobby, Lobby::class.java)
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                                Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(intent)
+
                     }, { error ->
                         Log.e("Error", "Error in response: ${error.message}")
                         Log.e("Error", error.message.toString())
@@ -151,5 +181,4 @@ Toast.makeText(this,"Marking entrance time",Toast.LENGTH_SHORT)
         val minutos = diferencia.toMinutes() % 60
         return String.format("%02d:%02d:00", horas, minutos)
     }
-
 }

@@ -3,14 +3,12 @@ package com.example.integradora2
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.integradora2.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -18,11 +16,11 @@ class MainActivity : AppCompatActivity() {
 
         val shared = getSharedPreferences("UserPreferences", MODE_PRIVATE)
 
-
         binding.btnContinuar.setOnClickListener {
-            val int = Intent(this@MainActivity,Home::class.java)
-                    Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(int)
+            val intent = Intent(this@MainActivity, Home::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
+            finish()
         }
     }
 }

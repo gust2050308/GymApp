@@ -3,7 +3,6 @@ package com.example.integradora2
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.provider.ContactsContract.CommonDataKinds.Im
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -26,28 +25,27 @@ class Home : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         queue = Volley.newRequestQueue(this)
 
         val sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE)
 
         val token = sharedPreferences.getString("token", "#")
 
-        if(token!="#"){
+        if (token != "#") {
             val intent = Intent(this@Home, Lobby::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
-            Intent.FLAG_ACTIVITY_CLEAR_TASK or
-                    Intent.FLAG_ACTIVITY_NEW_TASK
+            finish()
         }
 
-            binding.btnSignIn.setOnClickListener {
-                val formUsername = binding.edtEmail.text.toString()
-                val formPassword = binding.edtPassword.text.toString()
-                sendUserDataToApi(formUsername, formPassword)
-            }
+        binding.btnSignIn.setOnClickListener {
+            val formUsername = binding.edtEmail.text.toString()
+            val formPassword = binding.edtPassword.text.toString()
+            sendUserDataToApi(formUsername, formPassword)
+        }
 
         binding.btnRegistro.setOnClickListener {
-            val intent = Intent(this@Home,Registro::class.java)
+            val intent = Intent(this@Home, Registro::class.java)
             startActivity(intent)
         }
     }
@@ -70,33 +68,31 @@ class Home : AppCompatActivity() {
                 val user = response.getJSONObject("user")
                 // Obtener una instancia de SharedPreferences y crear un editor para hacer cambios
                 with(sharedPreferences.edit()) {
-                    putString("token", token)//no
-                    putString("id", user.getString("id"))//no
-                    putString("username", user.getString("username"))//si
-                    putString("password", user.getString("password"))//no
-                    putString("fullName", user.getString("fullName"))//si
-                    putString("email", user.getString("email"))//si
-                    putBoolean("enabled", user.getBoolean("enabled"))//no
-                    putString("role", user.getString("role"))//no
-                    putString("startDate", user.getString("startDate"))//si
-                    putString("endDate", user.getString("endDate"))//si
+                    putString("token", token)
+                    putString("id", user.getString("id"))
+                    putString("username", user.getString("username"))
+                    putString("password", user.getString("password"))
+                    putString("fullName", user.getString("fullName"))
+                    putString("email", user.getString("email"))
+                    putBoolean("enabled", user.getBoolean("enabled"))
+                    putString("role", user.getString("role"))
+                    putString("startDate", user.getString("startDate"))
+                    putString("endDate", user.getString("endDate"))
                     putString("membershipType", user.getString("membershipType"))
                     putString("telephone", user.getString("telephone"))
                     putString("photo", user.getString("photo"))
                     putString("accountNonLocked", user.getString("accountNonLocked"))
-                    apply()
-                    commit()
+                    apply() // Esto guarda los cambios de forma asíncrona
                 }
 
                 if (user.getString("username").isNotEmpty()) {
                     val intent = Intent(this, Lobby::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
-                    Intent.FLAG_ACTIVITY_CLEAR_TASK or
-                    Intent.FLAG_ACTIVITY_NEW_TASK
-
+                    finish()
                 } else {
                     // Maneja la respuesta del servidor
-                    Toast.makeText(this, "is empty", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "El nombre de usuario está vacío", Toast.LENGTH_SHORT).show()
                 }
             },
             { error ->
