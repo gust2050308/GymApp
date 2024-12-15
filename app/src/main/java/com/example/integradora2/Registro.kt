@@ -213,7 +213,7 @@ class Registro : AppCompatActivity() {
         BitmapFactory.decodeFile(path, options)
     options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight)
     options.inJustDecodeBounds = false
-        return BitmapFactory.decodeFile(path, options)
+        return BitmapFactory.decodeFile(path,options)
     }
 
     fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
