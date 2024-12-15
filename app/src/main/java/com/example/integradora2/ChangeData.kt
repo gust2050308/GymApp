@@ -16,6 +16,9 @@ class ChangeData : AppCompatActivity() {
         binding=ActivityChangeDataBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.btnActData.setOnClickListener {
+            var name binding.edtNameN
+        }
 
     }
 
